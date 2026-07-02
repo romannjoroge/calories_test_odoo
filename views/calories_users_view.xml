@@ -1,4 +1,16 @@
 <odoo>
+    <record id="calorie_listing" model="ir.ui.view">
+        <field name="name">test_calories_app.calories.users.view.tree</field>
+        <field name="model">calories.users</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="height" />
+                <field name="weight" />
+                <field name="physical_activty" />
+            </list>
+        </field>
+    </record>
+
     <record id="calorie_recommendation" model="ir.actions.act_window">
         <field name="name">Calorie Recommendation</field>
         <field name="res_model">calories.users</field>

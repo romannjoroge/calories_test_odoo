@@ -14,8 +14,10 @@ class UserData(models.Model):
         ("M", "Moderate exercise (3-5 days/wk)"),
         ("V", "Very active"),
         ("E", "Extra active")
-    ], required=True)
+    ], required=True, string="Physical Activity", default="LIT")
     goal = fields.Selection(selection=[
         ("LOSS", "Weight Loss")
-    ])
+    ], default="LOSS")
 
+
+    
