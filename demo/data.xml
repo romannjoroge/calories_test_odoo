@@ -1,0 +1,12 @@
+<odoo>
+    <data>
+        <record id="calories_1" model="calories.users">
+            <field name="gender">M</field>
+            <field name="age">30</field>
+            <field name="weight">65</field>
+            <field name="physical_activty">LIT</field>
+            <field name="goal">LOSS</field>
+            <field name="height">110</field>
+        </record>
+    </data>
+</odoo>
