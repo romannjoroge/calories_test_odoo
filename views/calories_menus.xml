@@ -1,0 +1,5 @@
+<odoo>
+    <menuitem id="calorie_root_level" name="Calories Root">
+        <menuitem id="create_recommendation" name="Get Recommendation" action="calorie_recommendation" />
+    </menuitem>
+</odoo>

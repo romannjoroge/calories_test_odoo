@@ -1,0 +1,7 @@
+<odoo>
+    <record id="calorie_recommendation" model="ir.actions.act_window">
+        <field name="name">Calorie Recommendation</field>
+        <field name="res_model">calories.users</field>
+        <field name="view_mode">form</field>
+    </record>
+</odoo>
