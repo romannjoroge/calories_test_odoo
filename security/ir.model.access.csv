@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+test_calories_app.access_calories_users,access_calories_users,test_calories_app.model_calories_users,base.group_user,1,0,0,0
+test_calories_app.access_calories_managers,access_calories_managers,test_calories_app.model_calories_users,test_calories_app.calorie_manager,1,1,1,1
