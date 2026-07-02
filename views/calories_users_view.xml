@@ -1,4 +1,26 @@
 <odoo>
+    <record id="calorie_form_view" model="ir.ui.view">
+        <field name="name">test_calories_app.calories.users.view.form</field>
+        <field name="model">calories.users</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="age"/>
+                        <field name="gender"/>
+                        <field name="height"/>
+                        <field name="weight"/>
+                        <field name="calories"/>
+                    </group>
+                    <group>
+                        <field name="physical_activty"/>
+                        <field name="goal"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
     <record id="calorie_listing" model="ir.ui.view">
         <field name="name">test_calories_app.calories.users.view.tree</field>
         <field name="model">calories.users</field>
@@ -7,6 +29,7 @@
                 <field name="height" />
                 <field name="weight" />
                 <field name="physical_activty" />
+                <field name="calories"/>
             </list>
         </field>
     </record>
