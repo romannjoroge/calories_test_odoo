@@ -18,6 +18,21 @@ class UserData(models.Model):
     goal = fields.Selection(selection=[
         ("LOSS", "Weight Loss")
     ], default="LOSS")
+    calories = fields.Float(compute="_calculate_calories")
 
+    def _calculate_calories(self):
+        for rec in self:
+            bmi = rec.weight / (rec.height * rec.height)
 
-    
+            if rec.physical_activity == "LIT":
+                rec.calories = 1.2 * bmi
+            elif rec.physical_activity == "LIG":
+                rec.calories = 1.375 * bmi
+            elif rec.physical_activity == "M":
+                rec.calories = 1.55 * bmi
+            elif rec.physical_activity == "V":
+                rec.calories = 1.725 * bmi
+            elif rec.physical_activity == "E":
+                rec.calories = 1.9 * bmi
+            else:
+                rec.calories = 0
