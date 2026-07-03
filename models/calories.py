@@ -6,8 +6,8 @@ class UserData(models.Model):
 
     gender = fields.Selection(selection=[('M', "Male"), ('F', "Female")])
     age = fields.Integer()
-    height = fields.Float(required=True)
-    weight = fields.Float(required=True)
+    height = fields.Float(required=True, string="Height (m)")
+    weight = fields.Float(required=True, string="Weight (kg)")
     physical_activty = fields.Selection(selection=[
         ("LIT", "Little exercise"),
         ("LIG", "Light exercise"),
@@ -18,11 +18,10 @@ class UserData(models.Model):
     goal = fields.Selection(selection=[
         ("LOSS", "Weight Loss")
     ], default="LOSS")
-    calories = fields.Float(compute="_calculate_calories")
+    calories = fields.Float(compute="_calculate_calories", string="Recommended Calories")
 
     def _calculate_calories(self):
         for rec in self:
-            print(rec)
             try:
                 bmi = rec.weight / (rec.height * rec.height)
             except ZeroDivisionError:
