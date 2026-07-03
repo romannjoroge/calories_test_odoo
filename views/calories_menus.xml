@@ -2,5 +2,6 @@
     <menuitem id="calorie_root_level" name="Calories Root">
         <menuitem id="create_recommendation" name="Get Recommendation" action="calorie_recommendation" />
         <menuitem id="view_past_recommendations" name="Previous Recommendations" action="calorie_previous_recommendations" />
+        <menuitem id="view_calorie_managers" name="View Calorie Managers" action="calorie_managers_view" />
     </menuitem>
 </odoo>
