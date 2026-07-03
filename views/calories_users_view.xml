@@ -35,8 +35,14 @@
     </record>
 
     <record id="calorie_recommendation" model="ir.actions.act_window">
-        <field name="name">Calorie Recommendation</field>
+        <field name="name">Get Recommendations</field>
         <field name="res_model">calories.users</field>
         <field name="view_mode">form</field>
+    </record>
+
+    <record id="calorie_previous_recommendations" model="ir.actions.act_window">
+        <field name="name">Previous Recommendations</field>
+        <field name="res_model">calories.users</field>
+        <field name="view_mode">list</field>
     </record>
 </odoo>
