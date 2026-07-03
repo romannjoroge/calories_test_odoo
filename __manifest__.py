@@ -1,5 +1,5 @@
 {
-    "name": "test_calories_app",
+    "name": "calories-test-odoo",
     "summary": "Test application for recommending number of calories someone should take",
     "version": "19.0.0.0.0",
     "author": "Roman Njoroge",
