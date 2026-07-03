@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 class UserData(models.Model):
     _name = "calories.users"
@@ -18,24 +18,28 @@ class UserData(models.Model):
     goal = fields.Selection(selection=[
         ("LOSS", "Weight Loss")
     ], default="LOSS")
-    calories = fields.Float(compute="_calculate_calories", string="Recommended Calories")
+    calories = fields.Float(compute="_calculate_calories", string="Recommended Calories", store=True)
 
+    @api.depends('weight', 'height', 'physical_activty')
     def _calculate_calories(self):
         for rec in self:
+            if not rec.height or not rec.weight:
+                rec.calories = 0
+                continue
             try:
                 bmi = rec.weight / (rec.height * rec.height)
             except ZeroDivisionError:
                 rec.calories = 0
+                continue
+            if rec.physical_activty == "LIT":
+                rec.calories = 1.2 * bmi
+            elif rec.physical_activty == "LIG":
+                rec.calories = 1.375 * bmi
+            elif rec.physical_activty == "M":
+                rec.calories = 1.55 * bmi
+            elif rec.physical_activty == "V":
+                rec.calories = 1.725 * bmi
+            elif rec.physical_activty == "E":
+                rec.calories = 1.9 * bmi
             else:
-                if rec.physical_activty == "LIT":
-                    rec.calories = 1.2 * bmi
-                elif rec.physical_activty == "LIG":
-                    rec.calories = 1.375 * bmi
-                elif rec.physical_activty == "M":
-                    rec.calories = 1.55 * bmi
-                elif rec.physical_activty == "V":
-                    rec.calories = 1.725 * bmi
-                elif rec.physical_activty == "E":
-                    rec.calories = 1.9 * bmi
-                else:
-                    rec.calories = 0
+                rec.calories = 0
