@@ -32,6 +32,7 @@
                 <field name="physical_activty" />
                 <field name="calories"/>
                 <field name="manager_id" />
+                <field name="manager_calories" />
             </list>
         </field>
     </record>
