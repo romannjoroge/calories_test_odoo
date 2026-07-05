@@ -10,5 +10,6 @@ class CalorieMealIngredient(models.Model):
         required=True,
         ondelete="cascade",
         string="Meal",
+        index=True,
     )
-    name = fields.Char(required=True, string="Ingredient")
+    name = fields.Char(required=True, string="Ingredient", index=True)
