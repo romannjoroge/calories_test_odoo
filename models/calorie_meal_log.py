@@ -69,27 +69,54 @@ class CalorieMealLog(models.Model):
                 "fat_g": 0.0,
             }
 
-        url = "https://world.openfoodfacts.org/api/v2/search"
-        params = {
+        request_headers = {
+            "User-Agent": "calories_test_odoo/1.0 (+https://example.com)",
+            "Accept": "application/json",
+        }
+        request_params = {
+            "search_terms": food_name,
+            "search_simple": 1,
             "fields": "product_name,nutriments",
-            "categories_tags_en": food_name,
+            "page_size": 1,
         }
 
         try:
-            response = requests.get(url, params=params, timeout=10)
+            response = requests.get(
+                "https://world.openfoodfacts.org/api/v2/search",
+                params=request_params,
+                headers=request_headers,
+                timeout=10,
+            )
             response.raise_for_status()
         except requests.RequestException as exc:
-            _logger.exception("Nutrition lookup failed for %s: %s", food_name, exc)
-            return {
-                "state": "error",
-                "message": _(
-                    "Unable to reach the nutrition service right now. Please try again later."
-                ),
-                "calories": 0.0,
-                "protein_g": 0.0,
-                "carbs_g": 0.0,
-                "fat_g": 0.0,
-            }
+            _logger.warning("Nutrition lookup failed for %s using v2 search: %s", food_name, exc)
+            try:
+                response = requests.get(
+                    "https://world.openfoodfacts.org/cgi/search.pl",
+                    params={
+                        **request_params,
+                        "json": 1,
+                    },
+                    headers=request_headers,
+                    timeout=10,
+                )
+                response.raise_for_status()
+            except requests.RequestException as fallback_exc:
+                _logger.exception(
+                    "Nutrition lookup failed for %s using fallback endpoint: %s",
+                    food_name,
+                    fallback_exc,
+                )
+                return {
+                    "state": "error",
+                    "message": _(
+                        "Unable to reach the nutrition service right now. Please try again later."
+                    ),
+                    "calories": 0.0,
+                    "protein_g": 0.0,
+                    "carbs_g": 0.0,
+                    "fat_g": 0.0,
+                }
 
         try:
             payload = response.json()
