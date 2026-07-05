@@ -72,7 +72,7 @@ class CalorieMealLog(models.Model):
         url = "https://world.openfoodfacts.org/api/v2/search"
         params = {
             "fields": "product_name,nutriments",
-            "search_terms": food_name,
+            "categories_tags_en": food_name,
         }
 
         try:
