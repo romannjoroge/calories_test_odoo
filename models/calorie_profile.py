@@ -12,14 +12,6 @@ class CalorieProfile(models.Model):
     _description = "Calorie profile"
     _rec_name = "user_id"
 
-    @api.constrains("user_id")
-    def _check_unique_user_profile(self):
-        for record in self:
-            existing = self.search([("user_id", "=", record.user_id.id), ("id", "!=", record.id)])
-            if existing:
-                _logger.warning("Duplicate calorie profile blocked for user %s", record.user_id.id)
-                raise ValidationError(_("A calorie profile already exists for this user."))
-
     user_id = fields.Many2one(
         "res.users",
         required=True,
@@ -27,6 +19,9 @@ class CalorieProfile(models.Model):
         default=lambda self: self.env.user,
         string="User",
     )
+
+    _unique_profile_user_id = models.Constraint("UNIQUE(user_id)", "A calorie profile already exists for this user")
+
     sex = fields.Selection(
         [("male", "Male"), ("female", "Female")],
         required=True,
