@@ -12,7 +12,7 @@
         "views/calorie_meal_log_views.xml",
         "views/calories_test_odoo_menus.xml",
     ],
-    "demo": ["demo/data.xml"],
+    "demo": [],
     "application": True,
     "category": "Tools",
     "post_init_hook": 'post_init_hook'
