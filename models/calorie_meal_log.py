@@ -56,12 +56,13 @@ class CalorieMealLog(models.Model):
         return ingredient_names
 
     def _fetch_nutrition_data(self, food_name):
-        return fetch_nutrition_data(food_name)
+        return fetch_nutrition_data(food_name, env=self.env)
 
     def action_fetch_nutrition_data(self):
         for record in self:
             ingredient_names = record._parse_ingredient_names()
-            _logger.info("Fetching nutrition data for meal %s with ingredients %s", record.id, ingredient_names)
+            if _logger.isEnabledFor(logging.INFO):
+                _logger.info("Fetching nutrition data for meal %s with ingredients %s", record.id, ingredient_names)
             if not ingredient_names:
                 ingredient_names = [record.food_name]
 
@@ -77,22 +78,35 @@ class CalorieMealLog(models.Model):
             fetched_any = False
             for ingredient_name in ingredient_names:
                 result = record._fetch_nutrition_data(ingredient_name)
-                aggregated["calories"] += result["calories"]
-                aggregated["protein_g"] += result["protein_g"]
-                aggregated["carbs_g"] += result["carbs_g"]
-                aggregated["fat_g"] += result["fat_g"]
-                if result["state"] == "fetched":
+                aggregated["calories"] += result.get("calories", 0.0)
+                aggregated["protein_g"] += result.get("protein_g", 0.0)
+                aggregated["carbs_g"] += result.get("carbs_g", 0.0)
+                aggregated["fat_g"] += result.get("fat_g", 0.0)
+
+                result_state = result.get("state", "error")
+                if result_state == "fetched":
                     fetched_any = True
-                elif not last_message and result["message"]:
+                elif result_state == "error":
+                    aggregated["state"] = "error"
+                    aggregated["message"] = result.get("message") or aggregated["message"]
+                elif result_state == "not_found" and aggregated["state"] != "error":
+                    aggregated["state"] = "not_found"
+                    aggregated["message"] = result.get("message") or aggregated["message"]
+
+                if not last_message and result.get("message"):
                     last_message = result["message"]
 
             if not fetched_any:
-                aggregated["state"] = "error" if last_message else "not_found"
-                aggregated["message"] = last_message or _("No nutrition information was found for the provided ingredients.")
-                _logger.warning("Nutrition aggregation failed for meal %s: %s", record.id, aggregated["message"])
+                if aggregated["state"] == "fetched":
+                    aggregated["state"] = "not_found"
+                if not aggregated["message"]:
+                    aggregated["message"] = last_message or _("No nutrition information was found for the provided ingredients.")
+                if _logger.isEnabledFor(logging.WARNING):
+                    _logger.warning("Nutrition aggregation failed for meal %s: %s", record.id, aggregated["message"])
             else:
                 aggregated["message"] = False
-                _logger.info("Nutrition aggregation completed for meal %s", record.id)
+                if _logger.isEnabledFor(logging.INFO):
+                    _logger.info("Nutrition aggregation completed for meal %s", record.id)
 
             record.write(
                 {

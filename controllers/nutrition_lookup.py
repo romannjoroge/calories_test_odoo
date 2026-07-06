@@ -7,12 +7,23 @@ from odoo import _
 _logger = logging.getLogger(__name__)
 
 
-def fetch_nutrition_data(food_name):
+def _get_translation_func(env=None):
+    if env is not None:
+        lang = env.context.get("lang") or getattr(getattr(env, "user", None), "lang", None) or getattr(env, "lang", None)
+        if lang:
+            return env._
+    return _
+
+
+def fetch_nutrition_data(food_name, env=None):
+    translate = _get_translation_func(env)
+
     if not food_name:
-        _logger.warning("Nutrition lookup skipped because no food name was provided.")
+        if _logger.isEnabledFor(logging.WARNING):
+            _logger.warning("Nutrition lookup skipped because no food name was provided.")
         return {
             "state": "error",
-            "message": _("Please enter a food name to look up."),
+            "message": translate("Please enter a food name to look up."),
             "calories": 0.0,
             "protein_g": 0.0,
             "carbs_g": 0.0,
@@ -52,14 +63,15 @@ def fetch_nutrition_data(food_name):
             )
             response.raise_for_status()
         except requests.RequestException as fallback_exc:
-            _logger.exception(
-                "Nutrition lookup failed for %s using fallback endpoint: %s",
-                food_name,
-                fallback_exc,
-            )
+            if _logger.isEnabledFor(logging.ERROR):
+                _logger.exception(
+                    "Nutrition lookup failed for %s using fallback endpoint: %s",
+                    food_name,
+                    fallback_exc,
+                )
             return {
                 "state": "error",
-                "message": _(
+                "message": translate(
                     "Unable to reach the nutrition service right now. Please try again later."
                 ),
                 "calories": 0.0,
@@ -71,10 +83,11 @@ def fetch_nutrition_data(food_name):
     try:
         payload = response.json()
     except ValueError as exc:
-        _logger.exception("Nutrition service returned invalid JSON for %s: %s", food_name, exc)
+        if _logger.isEnabledFor(logging.ERROR):
+            _logger.exception("Nutrition service returned invalid JSON for %s: %s", food_name, exc)
         return {
             "state": "error",
-            "message": _("The nutrition service returned invalid data."),
+            "message": translate("The nutrition service returned invalid data."),
             "calories": 0.0,
             "protein_g": 0.0,
             "carbs_g": 0.0,
@@ -83,10 +96,11 @@ def fetch_nutrition_data(food_name):
 
     products = payload.get("products") or []
     if not products:
-        _logger.info("Nutrition lookup returned no products for %s", food_name)
+        if _logger.isEnabledFor(logging.INFO):
+            _logger.info("Nutrition lookup returned no products for %s", food_name)
         return {
             "state": "not_found",
-            "message": _("No nutrition information was found for this food."),
+            "message": translate("No nutrition information was found for this food."),
             "calories": 0.0,
             "protein_g": 0.0,
             "carbs_g": 0.0,

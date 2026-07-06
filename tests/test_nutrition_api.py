@@ -26,7 +26,7 @@ class TestNutritionApi(TransactionCase):
             "datetime_consumed": "2024-01-01 12:00:00",
         })
         fake_response = type("Resp", (), {"raise_for_status": lambda self: None, "json": lambda self: {"products": [{"nutriments": {"energy-kcal_100g": 52.0, "proteins_100g": 0.3, "carbohydrates_100g": 14.0, "fat_100g": 0.2}}]}})()
-        with patch("calories_test_odoo.controllers.nutrition_lookup.requests.get", return_value=fake_response) as mocked_get:
+        with patch("odoo.addons.calories_test_odoo.controllers.nutrition_lookup.requests.get", return_value=fake_response) as mocked_get:
             meal.action_fetch_nutrition_data()
         self.assertEqual(meal.fetch_state, "fetched")
         self.assertEqual(meal.calories, 52.0)
@@ -48,7 +48,7 @@ class TestNutritionApi(TransactionCase):
             "datetime_consumed": "2024-01-01 12:00:00",
         })
         fake_response = type("Resp", (), {"raise_for_status": lambda self: None, "json": lambda self: {"products": []}})()
-        with patch("calories_test_odoo.controllers.nutrition_lookup.requests.get", return_value=fake_response) as mocked_get:
+        with patch("odoo.addons.calories_test_odoo.controllers.nutrition_lookup.requests.get", return_value=fake_response) as mocked_get:
             meal.action_fetch_nutrition_data()
         self.assertEqual(meal.fetch_state, "not_found")
         self.assertEqual(meal.error_message, "No nutrition information was found for this food.")
@@ -70,7 +70,7 @@ class TestNutritionApi(TransactionCase):
             "datetime_consumed": "2024-01-01 12:00:00",
         })
         fake_response = type("Resp", (), {"raise_for_status": lambda self: None, "json": lambda self: {"products": []}})()
-        with patch("calories_test_odoo.controllers.nutrition_lookup.requests.get", return_value=fake_response) as mocked_get:
+        with patch("odoo.addons.calories_test_odoo.controllers.nutrition_lookup.requests.get", return_value=fake_response) as mocked_get:
             meal.action_fetch_nutrition_data()
         self.assertTrue(mocked_get.called)
         args, kwargs = mocked_get.call_args
@@ -95,7 +95,7 @@ class TestNutritionApi(TransactionCase):
             "food_name": "apple",
             "datetime_consumed": "2024-01-01 12:00:00",
         })
-        with patch("calories_test_odoo.controllers.nutrition_lookup.requests.get", side_effect=requests.exceptions.Timeout("boom")) as mocked_get:
+        with patch("odoo.addons.calories_test_odoo.controllers.nutrition_lookup.requests.get", side_effect=requests.exceptions.Timeout("boom")) as mocked_get:
             meal.action_fetch_nutrition_data()
         self.assertEqual(meal.fetch_state, "error")
         self.assertIn("Unable to reach", meal.error_message)
