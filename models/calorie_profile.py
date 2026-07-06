@@ -84,6 +84,7 @@ class CalorieProfile(models.Model):
     )
     active = fields.Boolean(default=True)
 
+
     @api.depends("age", "sex", "height_cm", "weight_kg", "activity_level", "goal")
     def _compute_budget(self):
         for record in self:

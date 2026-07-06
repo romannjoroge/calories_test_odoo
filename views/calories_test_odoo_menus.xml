@@ -1,6 +1,6 @@
 <odoo>
-    <record id="action_calorie_profile" model="ir.actions.act_window">
-        <field name="name">Profiles</field>
+    <record id="action_calorie_all_profile" model="ir.actions.act_window">
+        <field name="name">All Profiles</field>
         <field name="res_model">calorie.profile</field>
         <field name="view_mode">list,form</field>
     </record>
@@ -11,7 +11,18 @@
         <field name="view_mode">list,form</field>
     </record>
 
+    <!-- Action to show details of a single user-->
+    <record id="action_calorie_my_profile" model="ir.actions.server">
+        <field name="name">My Profile</field>
+        <field name="model_id" ref="model_calorie_profile"/>
+        <field name="state">code</field>
+        <field name="code">
+            raise Warning(record.name)
+        </field>
+    </record>
+
     <menuitem id="menu_calorie_root" name="Calorie Advisor" sequence="10"/>
-    <menuitem id="menu_calorie_profiles" name="Profiles" parent="menu_calorie_root" action="calories_test_odoo.action_calorie_profile" sequence="10"/>
-    <menuitem id="menu_calorie_meals" name="Meal logs" parent="menu_calorie_root" action="calories_test_odoo.action_calorie_meal_log" sequence="20"/>
+    <menuitem id="menu_calorie_profile" name="My Profile" parent="menu_calorie_root" action="calories_test_odoo.action_calorie_my_profile" sequence="20" />
+    <menuitem id="menu_calorie_meals" name="Meal logs" parent="menu_calorie_root" action="calories_test_odoo.action_calorie_meal_log" sequence="30"/>
+    <menuitem id="menu_calorie_all_profiles" name="All Profiles" parent="menu_calorie_root" action="calories_test_odoo.action_calorie_all_profile" sequence="40"/>
 </odoo>

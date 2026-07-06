@@ -1,6 +1,0 @@
-<odoo>
-    <menuitem id="calorie_root_level" name="Calories Root">
-        <menuitem id="create_recommendation" name="Get Recommendation" action="calorie_recommendation" />
-        <menuitem id="view_past_recommendations" name="Previous Recommendations" action="calorie_previous_recommendations" />
-    </menuitem>
-</odoo>
