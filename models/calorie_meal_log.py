@@ -10,6 +10,7 @@ _logger = logging.getLogger(__name__)
 class CalorieMealLog(models.Model):
     _name = "calorie.meal.log"
     _description = "Meal log"
+    _order = "datetime_consumed desc"
 
     profile_id = fields.Many2one(
         "calorie.profile",
