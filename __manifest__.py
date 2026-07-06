@@ -15,4 +15,5 @@
     "demo": ["demo/data.xml"],
     "application": True,
     "category": "Tools",
+    "post_init_hook": 'post_init_hook'
 }
