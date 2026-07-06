@@ -216,6 +216,12 @@ class CalorieMealLog(models.Model):
                 if not last_message and result.get("message"):
                     last_message = result["message"]
 
+            # Multiply aggregated calories, protein etc by quantity 
+            aggregated["calories"] *= record.quantity
+            aggregated["protein_g"] *= record.quantity
+            aggregated["carbs_g"] *= record.quantity
+            aggregated["fat_g"] *= record.quantity
+
             if not fetched_any:
                 if aggregated["state"] == "fetched":
                     aggregated["state"] = "not_found"
