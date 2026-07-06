@@ -17,7 +17,17 @@
         <field name="model_id" ref="model_calorie_profile"/>
         <field name="state">code</field>
         <field name="code">
-            raise Warning(record.name)
+profile = model.search([('user_id', '=', env.uid)])
+if not profile:
+    profile = model.create({'user_id': env.uid})
+action = {
+    'type': 'ir.actions.act_window',
+    'name': 'My Calorie Profile',
+    'res_model': 'calorie.profile',
+    'view_mode': 'form',
+    'target': 'current',
+    'res_id': profile.id,
+}
         </field>
     </record>
 
