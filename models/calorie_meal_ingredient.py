@@ -15,7 +15,7 @@ class CalorieMealIngredient(models.Model):
     ingredient_id = fields.Many2one(
         "product.template",
         required=True,
-        ondelete="cascade",
+        ondelete="restrict",
         string = "Ingredient",
     )
     quantity = fields.Float(required=True, default=1.0, string="Weight (g)")
