@@ -32,11 +32,14 @@ class CalorieMealLog(models.Model):
         default=fields.Datetime.now,
         string="Consumed at",
     )
-    quantity = fields.Float(default=1.0, string="Quantity")
+   
     calories = fields.Float(default=0.0, string="Calories")
     protein_g = fields.Float(default=0.0, string="Protein (g)")
     carbs_g = fields.Float(default=0.0, string="Carbs (g)")
     fat_g = fields.Float(default=0.0, string="Fat (g)")
+
+    # Calculate nutrition data from ingredients
+
     fetch_state = fields.Selection(
         [
             ("draft", "Draft"),

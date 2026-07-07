@@ -9,7 +9,6 @@
                         <field name="profile_id"/>
                         <field name="food_name"/>
                         <field name="datetime_consumed"/>
-                        <field name="quantity"/>
                     </group>
                     <notebook>
                         <page string="Ingredients">
