@@ -1,6 +1,6 @@
-from odoo import model, fields
+from odoo import models, fields
 
-class Ingredient(model.Models):
+class Ingredient(models.Model):
     _inherit = 'product.template'
 
     calories = fields.Float(string='Calories (kcal)', digits='Product Unit of Measure', help='per 100g')
