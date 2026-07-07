@@ -29,7 +29,7 @@
                         </page>
                     </notebook>
                     <group>
-                        <button name="action_fetch_nutrition_data" type="object" string="Fetch nutrition data" class="btn-primary"/>
+                        <!-- <button name="action_fetch_nutrition_data" type="object" string="Fetch nutrition data" class="btn-primary"/> -->
                         <field name="fetch_state" readonly="1"/>
                         <field name="error_message" readonly="1" invisible="not error_message"/>
                     </group>

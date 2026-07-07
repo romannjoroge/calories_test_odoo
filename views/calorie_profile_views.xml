@@ -57,6 +57,7 @@
                     <group class="col">
                         <field name="calories_consumed_today" readonly="1" />
                         <field name="daily_calorie_budget" readonly="1" />
+                        <field name="calories_remaining_today" readonly="1" />
                         <field name="calories_consumed_progress" readonly="1" widget="progressbar" />
                     </group>
                 </div>
