@@ -17,6 +17,9 @@ class CalorieMealLog(models.Model):
         required=True,
         ondelete="cascade",
         string="Profile",
+        default= lambda self: self.env["calorie.profile"].search(
+            [("user_id", "=", self.env.user.id)], limit=1
+        )
     )
     food_name = fields.Char(required=True, string="Food")
     ingredient_ids = fields.One2many(
