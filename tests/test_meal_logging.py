@@ -75,25 +75,46 @@ class TestMealLogging(TransactionCase):
             "activity_level": "moderate",
             "goal": "maintain",
         })
+
+        # Create test product ingredients
+        spaghetti = self.env["product.template"].create({
+            "name": "Spaghetti",
+            "calories": 120.0,
+            "protein": 4.0,
+            "carbs": 20.0,
+            "fat": 3.0,
+        })
+        # An ingredient who's details aren't stored in db. They should be fetched from API
+        meatballs = self.env["product.template"].create({
+            "name": "Meatballs",
+            "calories": 0,
+            "protein": 0,
+            "carbs": 0,
+            "fat": 0,
+        })
+
         meal = self.MealLog.create({
             "profile_id": profile.id,
             "food_name": "Spaghetti meal",
             "datetime_consumed": datetime.now(),
-            "ingredient_ids": [(0, 0, {"name": "spaghetti"}), (0, 0, {"name": "meatballs"})],
+            "ingredient_ids": [
+                (0, 0, {"ingredient_id": spaghetti.id, "quantity": 1}),
+                (0, 0, {"ingredient_id": meatballs.id, "quantity": 1}),
+            ],  
         })
         with patch.object(
             CalorieMealLog,
             "_fetch_nutrition_data",
             side_effect=[
-                {"state": "fetched", "message": False, "calories": 120.0, "protein_g": 4.0, "carbs_g": 20.0, "fat_g": 3.0},
                 {"state": "fetched", "message": False, "calories": 180.0, "protein_g": 12.0, "carbs_g": 10.0, "fat_g": 9.0},
             ],
         ) as mocked_fetch:
-            meal.action_fetch_nutrition_data()
+            # meal.action_fetch_nutrition_data()
+            meal._onchange_ingredients()
 
         self.assertEqual(meal.calories, 300.0)
         self.assertEqual(meal.protein_g, 16.0)
         self.assertEqual(meal.carbs_g, 30.0)
         self.assertEqual(meal.fat_g, 12.0)
-        self.assertEqual(mocked_fetch.call_count, 2)
+        self.assertEqual(mocked_fetch.call_count, 1)
         self.assertEqual(profile.calories_consumed_today, 300.0)
